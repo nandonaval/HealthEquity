@@ -10,6 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.OpenApi.Models;
+using CarsApi.Data;
 
 namespace CarsApi
 {
@@ -26,6 +28,8 @@ namespace CarsApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddScoped<ICarRepository, CarRepository>();
+            AddSwagger(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -38,6 +42,12 @@ namespace CarsApi
 
             app.UseHttpsRedirection();
 
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "CARS API V1");
+            });
+
             app.UseRouting();
 
             app.UseAuthorization();
@@ -45,6 +55,27 @@ namespace CarsApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+        }
+
+        private void AddSwagger(IServiceCollection services)
+        {
+            services.AddSwaggerGen(options =>
+            {
+                var groupName = "v1";
+
+                options.SwaggerDoc(groupName, new OpenApiInfo
+                {
+                    Title = $"Cars {groupName}",
+                    Version = groupName,
+                    Description = "CARS API",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Fernando Álvarez",
+                        Email = "nando.alvarez@hotmail.com",
+                        Url = new Uri("https://github.com/nandonaval"),
+                    }
+                });
             });
         }
     }
