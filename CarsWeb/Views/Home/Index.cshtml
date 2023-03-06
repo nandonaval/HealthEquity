@@ -1,0 +1,73 @@
+﻿@model List<Car>
+@{
+    ViewData["Title"] = "Home Page";
+}
+<div class="card">
+
+    <div class="card-header">
+        @ViewBag.Action
+    </div>
+
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Make</th>
+                    <th>Model</th>
+                    <th>Year</th>
+                    <th>Doors</th>
+                    <th>Color</th>
+                    <th>Guees</th>
+                    <th>Result</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.make</td>
+                        <td>@item.model</td>
+                        <td>@item.year</td>
+                        <td>@item.doors</td>
+                        <td>@item.color</td>
+                        <td>
+                            <input type="number" placeholder="Car price?" class="small" id="@("txtPrice_"+@item.id)">
+                            <input type="button" class="btn btn-primary btn-sm" onclick="guessPrice(@item.price, @item.id)" value="Guess!">
+                        </td>
+                        <td>
+                            <p style="display: none; color: forestgreen" id="@("divSuccess_"+@item.id)">Good job!</p>
+                            <p style="display: none; color: red" id="@("divError_"+@item.id)">Keep trying!</p>
+                        </td>
+                        
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>
+<div >
+
+</div>
+
+<script type="text/javascript">
+    
+    function guessPrice(price, id) {
+
+        var guess = document.getElementById('txtPrice_' + id).value;
+        var difference = Math.abs(price - guess);
+        var successDiv = document.getElementById('divSuccess_' + id);
+        var errorDiv = document.getElementById('divError_' + id);
+
+        successDiv.style.display = "none";
+        errorDiv.style.display = "none";
+
+        if (difference <= 5000)
+            successDiv.style.display = "block";
+        else
+            errorDiv.style.display = "block";
+    }
+
+</script>
+
